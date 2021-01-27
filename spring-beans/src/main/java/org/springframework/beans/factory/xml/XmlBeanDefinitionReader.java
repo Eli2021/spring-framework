@@ -325,7 +325,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			logger.trace("Loading XML bean definitions from " + encodedResource);
 		}
 
-		Set<EncodedResource> currentResources = this.resourcesCurrentlyBeingLoaded.get();
+		/* 获取通过属性记录的已加载的资源 */
+		Set<EncodedResource> currentResources = this.resourcesCurrentlyBeingLoaded.get(); 
 
 		if (!currentResources.add(encodedResource)) {
 			throw new BeanDefinitionStoreException(
@@ -337,14 +338,14 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		 */
 		try (InputStream inputStream = encodedResource.getResource().getInputStream()) {
 			/**
-			 * 封装成 InputSource
+			 * 封装成 InputSource (org.xml.sax.InputSource#InputSource(java.io.InputStream))
 			 */
 			InputSource inputSource = new InputSource(inputStream);
 			if (encodedResource.getEncoding() != null) {
 				inputSource.setEncoding(encodedResource.getEncoding());
 			}
 			/**
-			 * 加载 inputSource
+			 * 加载 inputSource, 核心逻辑
 			 */
 			return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
 		} catch (IOException ex) {
@@ -403,7 +404,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			 */
 			Document doc = doLoadDocument(inputSource, resource);
 			/**
-			 * 加载 document
+			 * 解析 document 注册 beanDefinition
 			 */
 			int count = registerBeanDefinitions(doc, resource);
 			if (logger.isDebugEnabled()) {
@@ -455,9 +456,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	protected int getValidationModeForResource(Resource resource) {
 		int validationModeToUse = getValidationMode();
+		/* 手动指定, 则使用手动指定的验证模式 */
 		if (validationModeToUse != VALIDATION_AUTO) {
 			return validationModeToUse;
 		}
+		/* 未指定, 使用自动检测 */
 		int detectedMode = detectValidationMode(resource);
 		if (detectedMode != VALIDATION_AUTO) {
 			return detectedMode;
@@ -515,12 +518,15 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see BeanDefinitionDocumentReader#registerBeanDefinitions
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
+		/* 使用 DefaultBeanDefinitionDocumentReader 实例化 BeanDefinitionDocumentReader */
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
+		/* 记录统计前加载的 BeanDefinition 的数量 */
 		int countBefore = getRegistry().getBeanDefinitionCount();
 		/**
-		 * documentReader 注册 资源
+		 * documentReader 加载及注册 BeanDefinition
 		 */
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
+		/* 返回本次加载的 BeanDefinition 的数量*/
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}
 

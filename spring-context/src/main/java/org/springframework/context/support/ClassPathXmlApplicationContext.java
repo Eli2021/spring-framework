@@ -142,7 +142,7 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 
 		super(parent);
 		/**
-		 * 将要读取的 xml 文件位置设置到 context 中
+		 * 读取 配置文件 路径 存储到  configLocations
 		 */
 		setConfigLocations(configLocations);
 		if (refresh) {
