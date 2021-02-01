@@ -80,7 +80,6 @@ public class ResourceEditorRegistrar implements PropertyEditorRegistrar {
 		this.propertyResolver = propertyResolver;
 	}
 
-
 	/**
 	 * Populate the given {@code registry} with the following resource editors:
 	 * ResourceEditor, InputStreamEditor, InputSourceEditor, FileEditor, URLEditor,
