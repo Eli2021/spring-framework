@@ -35,6 +35,7 @@ public class AspectJMethodBeforeAdvice extends AbstractAspectJAdvice implements 
 	public AspectJMethodBeforeAdvice(
 			Method aspectJBeforeAdviceMethod, AspectJExpressionPointcut pointcut, AspectInstanceFactory aif) {
 
+		// 目标方法调用前, before
 		super(aspectJBeforeAdviceMethod, pointcut, aif);
 	}
 
